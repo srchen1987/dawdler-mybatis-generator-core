@@ -1,0 +1,23 @@
+# Mobile To
+.mtj.tmp/
+
+# Package F
+*.war
+*.ear
+
+# idea IDE
+.idea/
+*.iml
+*.project
+
+# log file
+*.log
+
+#target fil
+target/
+
+
+/target/
+.classpath
+.project
+.settings
