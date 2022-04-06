@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+	<classPathEntry
+		location="/home/srchen/mysql-connector-java-8.0.12.jar" />
+	<context id="mydemo" targetRuntime="MyBatis3">
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+		<plugin type="org.mybatis.generator.plugins.AnywidePlugin">
+			<property name="apiProject" value="demo-load-api" />
+			<property name="serviceProject" value="demo-service" />
+			<property name="loadWebProject" value="demo-load-web" />
+			<property name="webProject" value="demo-api" />
+			<property name="chanelGroupId" value="user" />
+			<property name="targetPackageController"
+				value="com.anywide.demo.controller" />
+			<property name="targetPackageService"
+				value="com.anywide.demo.service" />
+			<property name="targetPackageServiceImpl"
+				value="com.anywide.demo.service.impl" />
+		</plugin>
+		<commentGenerator
+			type="org.mybatis.generator.internal.AnywideCommentGenerator">
+			<property name="suppressAllComments" value="false" />
+			<property name="company" value="普天太力 " />
+		</commentGenerator>
+		<jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+			connectionURL="jdbc:mysql://127.0.0.1:3306/sinopec?nullCatalogMeansCurrent=true&amp;useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false&amp;allowPublicKeyRetrieval=True"
+			userId="platform" password="12345678">
+		</jdbcConnection>
+		<javaTypeResolver><!-- 映射java中的bigdecimal -->
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<javaModelGenerator
+			targetPackage="com.anywide.demo.entity" targetProject="demo-load-api">
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+		<sqlMapGenerator
+			targetPackage="com.anywide.demo.dao.xml" targetProject="demo-service">
+		</sqlMapGenerator>
+
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="com.anywide.demo.dao" targetProject="demo-service">
+		</javaClientGenerator>
+		<table schema="" tableName="demo_user" domainObjectName="User"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false"></table>
+	</context>
+</generatorConfiguration>
