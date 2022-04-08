@@ -83,7 +83,7 @@ dawdler-mybatis-generator-core 是基于mybatis-generator-core进行二次开发
 		<commentGenerator
 			type="org.mybatis.generator.internal.AnywideCommentGenerator">
 			<property name="suppressAllComments" value="false" />
-			<property name="company" value="普天太力 " />
+			<property name="company" value="dawlder " />
 		</commentGenerator>
 		<jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
 			connectionURL="jdbc:mysql://127.0.0.1:3306/sinopec?nullCatalogMeansCurrent=true&amp;useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false&amp;allowPublicKeyRetrieval=True"
