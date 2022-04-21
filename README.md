@@ -2,7 +2,7 @@
 
 ## 模块介绍
 
-dawdler-mybatis-generator-core 是基于mybatis-generator-core进行二次开发实现的一套快速构建微服务的代码生成工具, 可以自动生成微服务的接口和实现类, 并且可以自动生成微服务的服务提供者和服务消费者.
+dawdler-mybatis-generator-core 是基于mybatis-generator-core进行二次开发实现的一套快速构建微服务的代码生成工具, 可以自动生成微服务的接口和实现类, 并且可以自动生成微服务的服务提供者和服务消费者以及前端的api和验证器.
 ### 1. 生成文件说明
  
 | 文件 | 所属模块 | 描述 |
@@ -16,44 +16,9 @@ dawdler-mybatis-generator-core 是基于mybatis-generator-core进行二次开发
 | controllerValidator | web | 校验文件(校验框架,请求webApi时会做相对的校验) |
 
 
-### 2. 安装方式
+### 2. 使用方式
 
-1. [下载eclipse](https://www.eclipse.org/downloads/)
-
-2. 安装mybatis generator插件 
-   
-   点击 windows -> eclipse marketPlace 键入 mybatis generator 进行安装(目前版本是1.4.1).
-
-3. 下载二开后的插件[]().
-   
-4. 替换jar包
-
-   找到对应的插件jar包,将下载的进行替换,笔者的jar在 /home/srchen/.p2/pool/plugins/org.mybatis.generator.core_1.4.1.202203082207.jar.
-   
-   插件存放位置在{用户目录}/.p2/pool/plugins/xxx.jar  （win mac linux发行版全部如此)
-
-5. 重启eclipse  
-
-### 3. 使用方式
-
-#### 3.1 generatorConfig.xml配置文件说明
-
-  以下配置文件在配置文件 提供的项目源码中.
-  
-  主要更改 
-
-  | 配置名 | 描述 |
-  | :-: | :-: |
-  | apiProject | api项目(java项目名) |
-  | serviceProject | service项目(java项目名) |
-  | loadWebProject | loadWeb项目(java项目名) |
-  | webProject | web项目(java项目名) |
-  | chanelGroupId | 服务模块名用于生成@RemoteService("服务模块名") |
-  | targetPackageController | controller包名 |
-  | targetPackageService | service接口包名 |
-  | targetPackageServiceImpl | service实现层包名 |
-
-  其他配置参考官网即可(或参考例子做调整)
+#### 2.1 创建eneratorConfig.xml配置文件
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -65,7 +30,7 @@ dawdler-mybatis-generator-core 是基于mybatis-generator-core进行二次开发
 
 	<classPathEntry
 		location="/home/srchen/mysql-connector-java-8.0.12.jar" />
-	<context id="mydemo" targetRuntime="MyBatis3">
+	<context id="dawdler-generator" targetRuntime="MyBatis3">
 		<plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
 		<plugin type="org.mybatis.generator.plugins.AnywidePlugin">
 			<property name="apiProject" value="demo-load-api" />
@@ -114,11 +79,62 @@ dawdler-mybatis-generator-core 是基于mybatis-generator-core进行二次开发
 </generatorConfiguration>
 ```
 
-#### 3.2 在eclipse中使用
+  以上配置文件中的说明如下: 
 
-打开eclipse,将generatorConfig.xml 复制到项目中并配置好,右键 run as -> run mybatis generator.
+  | 配置名 | 描述 |
+  | :-: | :-: |
+  | apiProject | api项目(java项目名,或绝对路径) |
+  | serviceProject | service项目(java项目名,或绝对路径) |
+  | loadWebProject | loadWeb项目(java项目名,或绝对路径) |
+  | webProject | web项目(java项目名,或绝对路径) |
+  | chanelGroupId | 服务模块名用于生成@RemoteService("服务模块名") |
+  | targetPackageController | controller包名 |
+  | targetPackageService | service接口包名 |
+  | targetPackageServiceImpl | service实现层包名 |
 
-### 4. 基于源码二次开发
+  其他配置参考官网即可(或参考例子做调整)
+
+
+#### 2.2 通过jar的生成方式
+
+
+1. 下载二开后的插件[mybatis-generator-core-1.4.1.jar ](mybatis-generator-core-1.4.1.jar ).
+
+2. 执行jar:
+
+```shell
+
+	java -jar mybatis-generator-core-1.4.1.jar --configfile generatorConfig.xml #支持绝对路径
+
+```
+
+注意：generatorConfig.xml 中的apiProject、serviceProject、loadWebProject、webProject需要填写项目中java source所在的绝对路径.
+
+#### 2.3 eclipse插件方式
+
+1. [下载eclipse](https://www.eclipse.org/downloads/)
+
+2. 安装mybatis generator插件 
+   
+   点击 windows -> eclipse marketPlace 键入 mybatis generator 进行安装(目前版本是1.4.1).
+
+3. 下载二开后的插件[mybatis-generator-core-1.4.1.jar ](mybatis-generator-core-1.4.1.jar ).
+   
+4. 替换jar包
+
+   找到对应的插件jar包,将下载的进行替换,笔者的jar在 /home/srchen/.p2/pool/plugins/org.mybatis.generator.core_1.4.1.202203082207.jar.
+   
+   插件存放位置在{用户目录}/.p2/pool/plugins/xxx.jar  （win mac linux发行版全部如此)
+
+5. 重启eclipse  
+
+6. eclipse运行插件
+   
+   在eclipse中打开项目,选择项目->配置->mybatis generator->选择generatorConfig.xml文件.
+   
+   注意：generatorConfig.xml 中的apiProject、serviceProject、loadWebProject、webProject需要填写项目名即可.
+
+### 3. 基于源码二次开发
 
 所有更改过的类中都注释了 jackson.song ,需要更改注释或其他需求的可以自行更改,更改完之后mvn install 可以获取到jar.
 

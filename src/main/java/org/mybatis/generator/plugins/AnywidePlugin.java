@@ -520,7 +520,7 @@ public class AnywidePlugin extends PluginAdapter {
 			method.addParameter(new Parameter(pojoType, toLowerCase(tableName)));
 			return "record";
 		case 2:
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			if (introspectedTable.getRules().generatePrimaryKeyClass()) {
 				for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
 					FullyQualifiedJavaType type = introspectedColumn.getFullyQualifiedJavaType();
