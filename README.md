@@ -98,7 +98,13 @@ dawdler-mybatis-generator-core 是基于mybatis-generator-core进行二次开发
 #### 2.2 通过jar的生成方式
 
 
-1. 下载二开后的插件[mybatis-generator-core-1.4.1.jar ](mybatis-generator-core-1.4.1.jar ).
+1.  clone本项目并安装.
+   
+   ```shell
+   git clone https://github.com/srchen1987/dawdler-mybatis-generator-core.git
+
+   mvn install #获取mybatis-generator-core-1.4.1.jar
+   ```
 
 2. 执行jar:
 
@@ -118,7 +124,13 @@ dawdler-mybatis-generator-core 是基于mybatis-generator-core进行二次开发
    
    点击 windows -> eclipse marketPlace 键入 mybatis generator 进行安装(目前版本是1.4.1).
 
-3. 下载二开后的插件[mybatis-generator-core-1.4.1.jar ](mybatis-generator-core-1.4.1.jar ).
+3. clone本项目并安装.
+   
+  ```shell
+   git clone https://github.com/srchen1987/dawdler-mybatis-generator-core.git
+
+   mvn install #获取mybatis-generator-core-1.4.1.jar
+   ```
    
 4. 替换jar包
 
