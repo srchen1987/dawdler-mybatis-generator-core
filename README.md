@@ -1,4 +1,4 @@
-# dawdler-client-api-generator
+# dawdler-mybatis-generator-core
 
 ## 模块介绍
 

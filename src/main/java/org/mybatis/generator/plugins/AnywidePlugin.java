@@ -41,7 +41,6 @@ public class AnywidePlugin extends PluginAdapter {
 	private FullyQualifiedJavaType controllerAnnotationType;
 	private FullyQualifiedJavaType requestMappingAnnotationType;
 	private FullyQualifiedJavaType requestMethodType;
-	private FullyQualifiedJavaType viewType;
 	private FullyQualifiedJavaType pageResultType;
 	private FullyQualifiedJavaType baseResultType;
 	private FullyQualifiedJavaType pojoListType;
@@ -156,8 +155,6 @@ public class AnywidePlugin extends PluginAdapter {
 		// list
 		listType = new FullyQualifiedJavaType("java.util.List");
 
-		viewType = new FullyQualifiedJavaType("com.anywide.dawdler.clientplug.annotation.RequestMapping.ViewType");
-
 		requestMethodType = new FullyQualifiedJavaType(
 				"com.anywide.dawdler.clientplug.annotation.RequestMapping.RequestMethod");
 
@@ -270,7 +267,7 @@ public class AnywidePlugin extends PluginAdapter {
 		Method method = new Method("list");
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.addAnnotation(
-				"@RequestMapping(value=\"" + sb + "\",viewType = ViewType.json, method = RequestMethod.GET)");
+				"@RequestMapping(value=\"" + sb + "\", method = RequestMethod.GET)");
 		method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "pageOn"));
 		method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "row"));
 		method.addParameter(new Parameter(pojoType, lowerFirstName));
@@ -315,7 +312,7 @@ public class AnywidePlugin extends PluginAdapter {
 		Method method = new Method("info");
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.addAnnotation(
-				"@RequestMapping(value=\"" + sb + "\",viewType = ViewType.json, method = RequestMethod.GET)");
+				"@RequestMapping(value=\"" + sb + "\", method = RequestMethod.GET)");
 		FullyQualifiedJavaType baseResultType = new FullyQualifiedJavaType(this.baseResultType.getFullyQualifiedName());
 		baseResultType.addTypeArgument(pojoType);
 		method.setReturnType(baseResultType);
@@ -370,7 +367,7 @@ public class AnywidePlugin extends PluginAdapter {
 		Method method = new Method("update");
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.addAnnotation(
-				"@RequestMapping(value=\"" + sb + "\",viewType = ViewType.json, method = RequestMethod.POST)");
+				"@RequestMapping(value=\"" + sb + "\", method = RequestMethod.POST)");
 		FullyQualifiedJavaType baseResultType = new FullyQualifiedJavaType(this.baseResultType.getFullyQualifiedName());
 		baseResultType.addTypeArgument(FullyQualifiedJavaType.getStringInstance());
 		method.setReturnType(baseResultType);
@@ -414,7 +411,7 @@ public class AnywidePlugin extends PluginAdapter {
 		Method method = new Method("insert");
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.addAnnotation(
-				"@RequestMapping(value=\"" + sb + "\",viewType = ViewType.json, method = RequestMethod.POST)");
+				"@RequestMapping(value=\"" + sb + "\", method = RequestMethod.POST)");
 		FullyQualifiedJavaType baseResultType = new FullyQualifiedJavaType(this.baseResultType.getFullyQualifiedName());
 		baseResultType.addTypeArgument(FullyQualifiedJavaType.getStringInstance());
 		method.setReturnType(baseResultType);
@@ -457,7 +454,7 @@ public class AnywidePlugin extends PluginAdapter {
 		Method method = new Method("delete");
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.addAnnotation(
-				"@RequestMapping(value=\"" + sb + "\",viewType = ViewType.json, method = RequestMethod.POST)");
+				"@RequestMapping(value=\"" + sb + "\", method = RequestMethod.POST)");
 		FullyQualifiedJavaType baseResultType = new FullyQualifiedJavaType(this.baseResultType.getFullyQualifiedName());
 		baseResultType.addTypeArgument(FullyQualifiedJavaType.getStringInstance());
 		method.setReturnType(baseResultType);
@@ -542,7 +539,6 @@ public class AnywidePlugin extends PluginAdapter {
 			method.addParameter(new Parameter(pojoCriteriaType, "example"));
 			return "example";
 		case 4:
-
 			method.addParameter(0, new Parameter(pojoType, "record"));
 			method.addParameter(1, new Parameter(pojoCriteriaType, "example"));
 			return "record, example";
@@ -560,7 +556,6 @@ public class AnywidePlugin extends PluginAdapter {
 		topLevelClass.addImportedType(serviceType);
 		topLevelClass.addImportedType(pageType);
 		topLevelClass.addImportedType(pojoType);
-		topLevelClass.addImportedType(viewType);
 		topLevelClass.addImportedType(pageResultType);
 		topLevelClass.addImportedType(baseResultType);
 		topLevelClass.addImportedType(requestMethodType);
