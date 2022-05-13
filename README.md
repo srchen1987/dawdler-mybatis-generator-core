@@ -18,7 +18,7 @@ dawdler-mybatis-generator-core 是基于mybatis-generator-core进行二次开发
 
 ### 2. 使用方式
 
-#### 2.1 创建eneratorConfig.xml配置文件
+#### 2.1 创建generatorConfig.xml配置文件
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
