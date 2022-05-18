@@ -110,7 +110,7 @@ dawdler-mybatis-generator-core 是基于mybatis-generator-core进行二次开发
 
 ```shell
 
-	java -jar mybatis-generator-core-1.4.1.jar --configfile generatorConfig.xml #支持绝对路径
+	java -jar mybatis-generator-core-1.4.1.jar -configfile generatorConfig.xml #支持绝对路径
 
 ```
 
