@@ -266,8 +266,7 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append(".do");
 		Method method = new Method("list");
 		method.setVisibility(JavaVisibility.PUBLIC);
-		method.addAnnotation(
-				"@RequestMapping(value=\"" + sb + "\", method = RequestMethod.GET)");
+		method.addAnnotation("@RequestMapping(value=\"" + sb + "\", method = RequestMethod.GET)");
 		method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "pageOn"));
 		method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "row"));
 		method.addParameter(new Parameter(pojoType, lowerFirstName));
@@ -311,8 +310,7 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append(".do");
 		Method method = new Method("info");
 		method.setVisibility(JavaVisibility.PUBLIC);
-		method.addAnnotation(
-				"@RequestMapping(value=\"" + sb + "\", method = RequestMethod.GET)");
+		method.addAnnotation("@RequestMapping(value=\"" + sb + "\", method = RequestMethod.GET)");
 		FullyQualifiedJavaType baseResultType = new FullyQualifiedJavaType(this.baseResultType.getFullyQualifiedName());
 		baseResultType.addTypeArgument(pojoType);
 		method.setReturnType(baseResultType);
@@ -352,7 +350,7 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append("BaseResult<");
 		sb.append(pojoType.getShortName());
 		sb.append("> ");
-		sb.append("baseResult = new BaseResult<>(" + variableName + ", true);");
+		sb.append("baseResult = new BaseResult<>(" + variableName + ");");
 		sb.append("\n		");
 		sb.append("return baseResult;");
 		method.addBodyLine(sb.toString());
@@ -366,8 +364,7 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append("update.do");
 		Method method = new Method("update");
 		method.setVisibility(JavaVisibility.PUBLIC);
-		method.addAnnotation(
-				"@RequestMapping(value=\"" + sb + "\", method = RequestMethod.POST)");
+		method.addAnnotation("@RequestMapping(value=\"" + sb + "\", method = RequestMethod.POST)");
 		FullyQualifiedJavaType baseResultType = new FullyQualifiedJavaType(this.baseResultType.getFullyQualifiedName());
 		baseResultType.addTypeArgument(FullyQualifiedJavaType.getStringInstance());
 		method.setReturnType(baseResultType);
@@ -410,8 +407,7 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append("insert.do");
 		Method method = new Method("insert");
 		method.setVisibility(JavaVisibility.PUBLIC);
-		method.addAnnotation(
-				"@RequestMapping(value=\"" + sb + "\", method = RequestMethod.POST)");
+		method.addAnnotation("@RequestMapping(value=\"" + sb + "\", method = RequestMethod.POST)");
 		FullyQualifiedJavaType baseResultType = new FullyQualifiedJavaType(this.baseResultType.getFullyQualifiedName());
 		baseResultType.addTypeArgument(FullyQualifiedJavaType.getStringInstance());
 		method.setReturnType(baseResultType);
@@ -453,8 +449,7 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append("delete.do");
 		Method method = new Method("delete");
 		method.setVisibility(JavaVisibility.PUBLIC);
-		method.addAnnotation(
-				"@RequestMapping(value=\"" + sb + "\", method = RequestMethod.POST)");
+		method.addAnnotation("@RequestMapping(value=\"" + sb + "\", method = RequestMethod.POST)");
 		FullyQualifiedJavaType baseResultType = new FullyQualifiedJavaType(this.baseResultType.getFullyQualifiedName());
 		baseResultType.addTypeArgument(FullyQualifiedJavaType.getStringInstance());
 		method.setReturnType(baseResultType);
