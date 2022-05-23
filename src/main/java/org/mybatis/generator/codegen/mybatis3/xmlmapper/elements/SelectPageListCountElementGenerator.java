@@ -12,7 +12,7 @@ public class SelectPageListCountElementGenerator extends AbstractXmlElementGener
 	public void addElements(XmlElement parentElement) {
 		XmlElement answer = new XmlElement("select");
 		answer.addAttribute(new Attribute("id", this.introspectedTable.getSelectPageListCountStatementId()));
-		String parameterType = introspectedTable.getRules().calculateAllFieldsClass().getShortName();
+		String parameterType = introspectedTable.getBaseRecordType();
 		answer.addAttribute(new Attribute("parameterType", parameterType));
 		answer.addAttribute(new Attribute("resultType", FullyQualifiedJavaType.getIntInstance().toString()));
 		this.context.getCommentGenerator().addComment(answer);

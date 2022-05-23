@@ -9,12 +9,11 @@ import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
 import org.mybatis.generator.internal.util.StringUtility;
 import org.mybatis.generator.plugins.AnywidePlugin;
 
+//jackson.song add
 public class SelectPageListElementGenerator extends AbstractXmlElementGenerator {
 	public void addElements(XmlElement parentElement) {
 		XmlElement answer = new XmlElement("select");
 		answer.addAttribute(new Attribute("id", this.introspectedTable.getSelectPageListStatementId()));
-//		String parameterType = introspectedTable.getRules().calculateAllFieldsClass().getShortName();
-//		answer.addAttribute(new Attribute("parameterType", parameterType));
 		if (this.introspectedTable.getRules().generateResultMapWithBLOBs()) {
 			answer.addAttribute(new Attribute("resultMap", this.introspectedTable.getResultMapWithBLOBsId()));
 		} else {
@@ -56,6 +55,8 @@ public class SelectPageListElementGenerator extends AbstractXmlElementGenerator 
 			IntrospectedColumn column = this.introspectedTable.getAllColumns().get(i);
 			XmlElement isNotNullElement = new XmlElement("if");
 			sb.setLength(0);
+			sb.append(variableName);
+			sb.append(".");
 			sb.append(column.getJavaProperty());
 			sb.append(" != null");
 			isNotNullElement.addAttribute(new Attribute("test", sb.toString()));
