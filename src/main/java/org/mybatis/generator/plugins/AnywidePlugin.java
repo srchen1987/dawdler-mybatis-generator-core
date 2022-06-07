@@ -40,6 +40,7 @@ public class AnywidePlugin extends PluginAdapter {
 
 	private FullyQualifiedJavaType controllerAnnotationType;
 	private FullyQualifiedJavaType requestMappingAnnotationType;
+	private FullyQualifiedJavaType responseBodyAnnotationType;
 	private FullyQualifiedJavaType requestMethodType;
 	private FullyQualifiedJavaType pageResultType;
 	private FullyQualifiedJavaType baseResultType;
@@ -61,7 +62,6 @@ public class AnywidePlugin extends PluginAdapter {
 	/**
 	 * 是否添加注解
 	 */
-	private boolean enableAnnotation = true;
 	private boolean enableInfo = true;
 	private boolean enableInsert = true;
 	private boolean enableUpdate = true;
@@ -77,9 +77,6 @@ public class AnywidePlugin extends PluginAdapter {
 
 	@Override
 	public boolean validate(List<String> warnings) {
-		if (StringUtility.stringHasValue(properties.getProperty("enableAnnotation")))
-			enableAnnotation = StringUtility.isTrue(properties.getProperty("enableAnnotation"));
-
 		String enableInfo = properties.getProperty("enableInfo");
 		String enableInsert = properties.getProperty("enableInsert");
 		String enableUpdate = properties.getProperty("enableUpdate");
@@ -114,21 +111,21 @@ public class AnywidePlugin extends PluginAdapter {
 		schemaLocation = properties.getProperty("schemaLocation");
 		pojoUrl = context.getJavaModelGeneratorConfiguration().getTargetPackage();
 
-		if (enableAnnotation) {
-			serviceAnnotationType = new FullyQualifiedJavaType("com.anywide.dawdler.core.annotation.Service");
-			controllerAnnotationType = new FullyQualifiedJavaType(
-					"com.anywide.dawdler.clientplug.annotation.Controller");
-			requestMappingAnnotationType = new FullyQualifiedJavaType(
-					"com.anywide.dawdler.clientplug.annotation.RequestMapping");
-			remoteServiceAnnotationType = new FullyQualifiedJavaType(
-					"com.anywide.dawdler.core.annotation.RemoteService");
-			repositoryAnnotationType = new FullyQualifiedJavaType(
-					"com.anywide.dawdler.serverplug.db.annotation.Repository");
-			dBTransactionAnnotationType = new FullyQualifiedJavaType(
-					"com.anywide.dawdler.serverplug.db.annotation.DBTransaction");
-			dBTransactionMODEType = new FullyQualifiedJavaType(
-					"com.anywide.dawdler.serverplug.db.annotation.DBTransaction.MODE");
-		}
+		serviceAnnotationType = new FullyQualifiedJavaType("com.anywide.dawdler.core.annotation.Service");
+		controllerAnnotationType = new FullyQualifiedJavaType(
+				"com.anywide.dawdler.clientplug.annotation.Controller");
+		responseBodyAnnotationType = new FullyQualifiedJavaType(
+				"com.anywide.dawdler.clientplug.annotation.ResponseBody");
+		requestMappingAnnotationType = new FullyQualifiedJavaType(
+				"com.anywide.dawdler.clientplug.annotation.RequestMapping");
+		remoteServiceAnnotationType = new FullyQualifiedJavaType(
+				"com.anywide.dawdler.core.annotation.RemoteService");
+		repositoryAnnotationType = new FullyQualifiedJavaType(
+				"com.anywide.dawdler.serverplug.db.annotation.Repository");
+		dBTransactionAnnotationType = new FullyQualifiedJavaType(
+				"com.anywide.dawdler.serverplug.db.annotation.DBTransaction");
+		dBTransactionMODEType = new FullyQualifiedJavaType(
+				"com.anywide.dawdler.serverplug.db.annotation.DBTransaction.MODE");
 		return true;
 	}
 
@@ -200,11 +197,9 @@ public class AnywidePlugin extends PluginAdapter {
 			List<GeneratedJavaFile> files) {
 
 		topLevelClass.setVisibility(JavaVisibility.PUBLIC);
-		if (enableAnnotation) {
-			topLevelClass.addAnnotation("@Controller");
-			topLevelClass.addAnnotation("@RequestMapping(\"" + prefix + toLowerCase(tableName) + "\")");
-			topLevelClass.addImportedType(controllerAnnotationType);
-		}
+		topLevelClass.addAnnotation("@Controller");
+		topLevelClass.addAnnotation("@RequestMapping(\"" + prefix + toLowerCase(tableName) + "\")");
+		topLevelClass.addImportedType(controllerAnnotationType);
 		// 添加引用service
 		addField(topLevelClass, serviceType, "@Service");
 		// 添加方法
@@ -250,9 +245,7 @@ public class AnywidePlugin extends PluginAdapter {
 		Field field = new Field(toLowerCase(fullyQualifiedJavaType.getShortName()), fullyQualifiedJavaType);
 		topLevelClass.addImportedType(fullyQualifiedJavaType);
 		field.setVisibility(JavaVisibility.PRIVATE);
-		if (enableAnnotation) {
-			field.addAnnotation(annotation);
-		}
+		field.addAnnotation(annotation);
 		topLevelClass.addField(field);
 	}
 
@@ -266,6 +259,7 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append(".do");
 		Method method = new Method("list");
 		method.setVisibility(JavaVisibility.PUBLIC);
+		method.addAnnotation("@ResponseBody");
 		method.addAnnotation("@RequestMapping(value=\"" + sb + "\", method = RequestMethod.GET)");
 		method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "pageOn"));
 		method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "row"));
@@ -310,6 +304,7 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append(".do");
 		Method method = new Method("info");
 		method.setVisibility(JavaVisibility.PUBLIC);
+		method.addAnnotation("@ResponseBody");
 		method.addAnnotation("@RequestMapping(value=\"" + sb + "\", method = RequestMethod.GET)");
 		FullyQualifiedJavaType baseResultType = new FullyQualifiedJavaType(this.baseResultType.getFullyQualifiedName());
 		baseResultType.addTypeArgument(pojoType);
@@ -364,6 +359,7 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append("update.do");
 		Method method = new Method("update");
 		method.setVisibility(JavaVisibility.PUBLIC);
+		method.addAnnotation("@ResponseBody");
 		method.addAnnotation("@RequestMapping(value=\"" + sb + "\", method = RequestMethod.POST)");
 		FullyQualifiedJavaType baseResultType = new FullyQualifiedJavaType(this.baseResultType.getFullyQualifiedName());
 		baseResultType.addTypeArgument(FullyQualifiedJavaType.getStringInstance());
@@ -407,6 +403,7 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append("insert.do");
 		Method method = new Method("insert");
 		method.setVisibility(JavaVisibility.PUBLIC);
+		method.addAnnotation("@ResponseBody");
 		method.addAnnotation("@RequestMapping(value=\"" + sb + "\", method = RequestMethod.POST)");
 		FullyQualifiedJavaType baseResultType = new FullyQualifiedJavaType(this.baseResultType.getFullyQualifiedName());
 		baseResultType.addTypeArgument(FullyQualifiedJavaType.getStringInstance());
@@ -449,6 +446,7 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append("delete.do");
 		Method method = new Method("delete");
 		method.setVisibility(JavaVisibility.PUBLIC);
+		method.addAnnotation("@ResponseBody");
 		method.addAnnotation("@RequestMapping(value=\"" + sb + "\", method = RequestMethod.POST)");
 		FullyQualifiedJavaType baseResultType = new FullyQualifiedJavaType(this.baseResultType.getFullyQualifiedName());
 		baseResultType.addTypeArgument(FullyQualifiedJavaType.getStringInstance());
@@ -554,12 +552,10 @@ public class AnywidePlugin extends PluginAdapter {
 		topLevelClass.addImportedType(pageResultType);
 		topLevelClass.addImportedType(baseResultType);
 		topLevelClass.addImportedType(requestMethodType);
-
-		if (enableAnnotation) {
-			topLevelClass.addImportedType(controllerAnnotationType);
-			topLevelClass.addImportedType(serviceAnnotationType);
-			topLevelClass.addImportedType(requestMappingAnnotationType);
-		}
+		topLevelClass.addImportedType(controllerAnnotationType);
+		topLevelClass.addImportedType(responseBodyAnnotationType);
+		topLevelClass.addImportedType(serviceAnnotationType);
+		topLevelClass.addImportedType(requestMappingAnnotationType);
 	}
 
 	private String getServiceShort() {
