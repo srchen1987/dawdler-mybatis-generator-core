@@ -2,7 +2,7 @@
 
 ## 模块介绍
 
-dawdler-mybatis-generator-core 是基于mybatis-generator-core进行二次开发实现的一套快速构建微服务的代码生成工具, 可以自动生成微服务的接口和实现类, 并且可以自动生成微服务的服务提供者和服务消费者以及前端的api和验证器.
+springcloud-mybatis-generator-core 是基于mybatis-generator-core进行二次开发实现的一套快速构建微服务的代码生成工具, 可以自动生成微服务的接口和实现类, 并且可以自动生成微服务的服务提供者和服务消费者以及前端的api和验证器.
 ### 1. 生成文件说明
  
 | 文件 | 所属模块 | 描述 |
@@ -87,7 +87,7 @@ dawdler-mybatis-generator-core 是基于mybatis-generator-core进行二次开发
   | serviceProject | service项目(java项目名,或绝对路径) |
   | loadWebProject | loadWeb项目(java项目名,或绝对路径) |
   | webProject | web项目(java项目名,或绝对路径) |
-  | chanelGroupId | 服务模块名用于生成@RemoteService("服务模块名") |
+  | chanelGroupId | 服务模块名用于生成@@FeignClient("服务模块名") |
   | targetPackageController | controller包名 |
   | targetPackageService | service接口包名 |
   | targetPackageServiceImpl | service实现层包名 |
@@ -101,7 +101,7 @@ dawdler-mybatis-generator-core 是基于mybatis-generator-core进行二次开发
 1.  clone本项目并安装.
    
    ```shell
-   git clone https://github.com/srchen1987/dawdler-mybatis-generator-core.git
+   git clone https://github.com/srchen1987/springcloud-mybatis-generator-core.git
 
    mvn install #获取mybatis-generator-core-1.4.1.jar
    ```
@@ -127,7 +127,7 @@ dawdler-mybatis-generator-core 是基于mybatis-generator-core进行二次开发
 3. clone本项目并安装.
    
   ```shell
-   git clone https://github.com/srchen1987/dawdler-mybatis-generator-core.git
+   git clone https://github.com/srchen1987/springcloud-mybatis-generator-core.git
 
    mvn install #获取mybatis-generator-core-1.4.1.jar
    ```

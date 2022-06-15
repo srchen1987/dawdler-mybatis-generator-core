@@ -33,10 +33,7 @@ public class AnywidePlugin extends PluginAdapter {
 	private FullyQualifiedJavaType pageType;
 	private FullyQualifiedJavaType listType;
 	private FullyQualifiedJavaType pojoCriteriaType;
-	private FullyQualifiedJavaType serviceAnnotationType;
-	private FullyQualifiedJavaType repositoryAnnotationType;
 	private FullyQualifiedJavaType dBTransactionAnnotationType;
-	private FullyQualifiedJavaType dBTransactionMODEType;
 
 	private FullyQualifiedJavaType controllerAnnotationType;
 	private FullyQualifiedJavaType requestMappingAnnotationType;
@@ -45,7 +42,8 @@ public class AnywidePlugin extends PluginAdapter {
 	private FullyQualifiedJavaType pageResultType;
 	private FullyQualifiedJavaType baseResultType;
 	private FullyQualifiedJavaType pojoListType;
-	private FullyQualifiedJavaType remoteServiceAnnotationType;
+	private FullyQualifiedJavaType autowiredAnnotationType;
+	private FullyQualifiedJavaType feignClientType;
 
 	private String controllerPack;
 	private String servicePack;
@@ -111,21 +109,17 @@ public class AnywidePlugin extends PluginAdapter {
 		schemaLocation = properties.getProperty("schemaLocation");
 		pojoUrl = context.getJavaModelGeneratorConfiguration().getTargetPackage();
 
-		serviceAnnotationType = new FullyQualifiedJavaType("com.anywide.dawdler.core.annotation.Service");
 		controllerAnnotationType = new FullyQualifiedJavaType(
-			 "com.anywide.dawdler.clientplug.annotation.Controller");
+			 "org.springframework.web.bind.annotation.RestController");
 		responseBodyAnnotationType = new FullyQualifiedJavaType(
-			 "com.anywide.dawdler.clientplug.annotation.ResponseBody");
+			 "org.springframework.web.bind.annotation.ResponseBody");
 		requestMappingAnnotationType = new FullyQualifiedJavaType(
-			 "com.anywide.dawdler.clientplug.annotation.RequestMapping");
-		remoteServiceAnnotationType = new FullyQualifiedJavaType(
-			 "com.anywide.dawdler.core.annotation.RemoteService");
-		repositoryAnnotationType = new FullyQualifiedJavaType(
-			 "com.anywide.dawdler.serverplug.db.annotation.Repository");
+			 "org.springframework.web.bind.annotation.RequestMapping");
+		autowiredAnnotationType = new FullyQualifiedJavaType(
+			 "org.springframework.beans.factory.annotation.Autowired");
 		dBTransactionAnnotationType = new FullyQualifiedJavaType(
-			 "com.anywide.dawdler.serverplug.db.annotation.DBTransaction");
-		dBTransactionMODEType = new FullyQualifiedJavaType(
-			 "com.anywide.dawdler.serverplug.db.annotation.DBTransaction.MODE");
+			 "org.springframework.transaction.annotation.Transactional");
+		feignClientType = new FullyQualifiedJavaType("org.springframework.cloud.netflix.feign.FeignClient");
 		return true;
 	}
 
@@ -153,7 +147,7 @@ public class AnywidePlugin extends PluginAdapter {
 		listType = new FullyQualifiedJavaType("java.util.List");
 
 		requestMethodType = new FullyQualifiedJavaType(
-			 "com.anywide.dawdler.clientplug.annotation.RequestMapping.RequestMethod");
+			 "org.springframework.web.bind.annotation.RequestMethod");
 
 		pageResultType = new FullyQualifiedJavaType("com.anywide.dawdler.clientplug.web.result.PageResult");
 		pojoListType = new FullyQualifiedJavaType("List");
@@ -197,11 +191,11 @@ public class AnywidePlugin extends PluginAdapter {
 			List<GeneratedJavaFile> files) {
 
 		topLevelClass.setVisibility(JavaVisibility.PUBLIC);
-		topLevelClass.addAnnotation("@Controller");
+		topLevelClass.addAnnotation("@RestController");
 		topLevelClass.addAnnotation("@RequestMapping(\"" + prefix + toLowerCase(tableName) + "\")");
 		topLevelClass.addImportedType(controllerAnnotationType);
 		// 添加引用service
-		addField(topLevelClass, serviceType, "@Service");
+		addField(topLevelClass, serviceType, "@Autowired");
 		// 添加方法
 		Method method = null;
 
@@ -256,7 +250,6 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append(prefix);
 		String viewListName = "list";
 		sb.append(viewListName);
-		sb.append(".do");
 		Method method = new Method("list");
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.addAnnotation("@ResponseBody");
@@ -356,7 +349,7 @@ public class AnywidePlugin extends PluginAdapter {
 		String variableName = toLowerCase(tableName);
 		StringBuilder sb = new StringBuilder();
 		sb.append(prefix);
-		sb.append("update.do");
+		sb.append("update");
 		Method method = new Method("update");
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.addAnnotation("@ResponseBody");
@@ -400,7 +393,7 @@ public class AnywidePlugin extends PluginAdapter {
 		String variableName = toLowerCase(tableName);
 		StringBuilder sb = new StringBuilder();
 		sb.append(prefix);
-		sb.append("insert.do");
+		sb.append("insert");
 		Method method = new Method("insert");
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.addAnnotation("@ResponseBody");
@@ -443,7 +436,7 @@ public class AnywidePlugin extends PluginAdapter {
 	private Method delete(IntrospectedTable introspectedTable, String tableName) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(prefix);
-		sb.append("delete.do");
+		sb.append("delete");
 		Method method = new Method("delete");
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.addAnnotation("@ResponseBody");
@@ -554,7 +547,6 @@ public class AnywidePlugin extends PluginAdapter {
 		topLevelClass.addImportedType(requestMethodType);
 		topLevelClass.addImportedType(controllerAnnotationType);
 		topLevelClass.addImportedType(responseBodyAnnotationType);
-		topLevelClass.addImportedType(serviceAnnotationType);
 		topLevelClass.addImportedType(requestMappingAnnotationType);
 	}
 
@@ -748,13 +740,13 @@ public class AnywidePlugin extends PluginAdapter {
 
 	private void createValidatorMapping(XmlElement vms, IntrospectedTable introspectedTable, String tableName) {
 		if (this.enableInsert)
-			createValidatorMapping(vms, prefix + toLowerCase(tableName) + prefix + "insert.do", introspectedTable,
+			createValidatorMapping(vms, prefix + toLowerCase(tableName) + prefix + "insert", introspectedTable,
 					tableName, false, true);
 		if (this.enableUpdate)
-			createValidatorMapping(vms, prefix + toLowerCase(tableName) + prefix + "update.do", introspectedTable,
+			createValidatorMapping(vms, prefix + toLowerCase(tableName) + prefix + "update", introspectedTable,
 					tableName, true, true);
 		if (this.enableDelete)
-			createValidatorMapping(vms, prefix + toLowerCase(tableName) + prefix + "delete.do", introspectedTable,
+			createValidatorMapping(vms, prefix + toLowerCase(tableName) + prefix + "delete", introspectedTable,
 					tableName, true, false);
 	}
 
@@ -770,10 +762,11 @@ public class AnywidePlugin extends PluginAdapter {
 	 */
 	private void addService(Interface _interface, IntrospectedTable introspectedTable, String tableName,
 			List<GeneratedJavaFile> files) {
-		_interface.addImportedType(remoteServiceAnnotationType);
+		_interface.addImportedType(autowiredAnnotationType);
 		_interface.addImportedType(listType);
+		_interface.addImportedType(feignClientType);
 		_interface.setVisibility(JavaVisibility.PUBLIC);
-		_interface.addAnnotation("@RemoteService(\"" + chanelGroupId + "\")");
+		_interface.addAnnotation("@FeignClient(\"" + chanelGroupId + "\")");
 		// 添加方法
 		Method method = null;
 
@@ -841,41 +834,41 @@ public class AnywidePlugin extends PluginAdapter {
 		topLevelClass.addSuperInterface(serviceType);
 
 		topLevelClass.addImportedType(dBTransactionAnnotationType);
-		topLevelClass.addImportedType(dBTransactionMODEType);
-		topLevelClass.addImportedType(repositoryAnnotationType);
+
+		topLevelClass.addImportedType(autowiredAnnotationType);
 		// 添加引用dao
-		addField(topLevelClass, daoType, "@Repository");
+		addField(topLevelClass, daoType, "@Autowired");
 		// 添加方法
 		Method method = null;
 		boolean isPrimaryKey = !introspectedTable.getPrimaryKeyColumns().isEmpty();
 		if (this.enableInfo && isPrimaryKey) {
 			method = selectByPrimaryKey(introspectedTable, tableName);
 			method.addAnnotation("@Override");
-			method.addAnnotation("@DBTransaction(mode=MODE.readOnly)");
+			method.addAnnotation("@Transactional");
 			topLevelClass.addMethod(method);
 		}
 		if (this.enableList) {
 			method = selectPageList(introspectedTable, tableName);
 			method.addAnnotation("@Override");
-			method.addAnnotation("@DBTransaction(mode=MODE.readOnly)");
+			method.addAnnotation("@Transactional");
 			topLevelClass.addMethod(method);
 		}
 		if (this.enableUpdate && isPrimaryKey) {
 			method = getOtherInteger("updateByPrimaryKeySelective", introspectedTable, tableName, 1);
 			method.addAnnotation("@Override");
-			method.addAnnotation("@DBTransaction(mode=MODE.forceReadOnWrite)");
+			method.addAnnotation("@Transactional");
 			topLevelClass.addMethod(method);
 		}
 		if (this.enableInsert) {
 			method = getOtherInsertboolean("insertSelective", introspectedTable, tableName);
 			method.addAnnotation("@Override");
-			method.addAnnotation("@DBTransaction(mode=MODE.forceReadOnWrite)");
+			method.addAnnotation("@Transactional");
 			topLevelClass.addMethod(method);
 		}
 		if (this.enableDelete && isPrimaryKey) {
 			method = getOtherInteger("deleteByPrimaryKey", introspectedTable, tableName, 2);
 			method.addAnnotation("@Override");
-			method.addAnnotation("@DBTransaction(mode=MODE.forceReadOnWrite)");
+			method.addAnnotation("@Transactional");
 			topLevelClass.addMethod(method);
 		}
 
