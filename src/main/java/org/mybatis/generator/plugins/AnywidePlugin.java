@@ -161,11 +161,6 @@ public class AnywidePlugin extends PluginAdapter {
 		pageResultType.addTypeArgument(pojoListType);
 		baseResultType = new FullyQualifiedJavaType("com.anywide.dawdler.clientplug.web.result.BaseResult");
 
-		if (controllerPack.length() > (controllerPack.indexOf("controller") + "controller".length())) {
-			prefix = controllerPack.substring(controllerPack.indexOf("controller") + "controller".length())
-					.replaceAll("\\.", "/");
-			prefix += "/";
-		}
 		if (controllerPack != null && !"".equals(controllerPack)) {
 			TopLevelClass topLevelClass = new TopLevelClass(controllerType);
 			// 引入包
@@ -256,7 +251,6 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append(prefix);
 		String viewListName = "list";
 		sb.append(viewListName);
-		sb.append(".do");
 		Method method = new Method("list");
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.addAnnotation("@ResponseBody");
@@ -301,7 +295,6 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append(prefix);
 		String viewDetailName = "info";
 		sb.append(viewDetailName);
-		sb.append(".do");
 		Method method = new Method("info");
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.addAnnotation("@ResponseBody");
@@ -356,7 +349,7 @@ public class AnywidePlugin extends PluginAdapter {
 		String variableName = toLowerCase(tableName);
 		StringBuilder sb = new StringBuilder();
 		sb.append(prefix);
-		sb.append("update.do");
+		sb.append("update");
 		Method method = new Method("update");
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.addAnnotation("@ResponseBody");
@@ -400,7 +393,7 @@ public class AnywidePlugin extends PluginAdapter {
 		String variableName = toLowerCase(tableName);
 		StringBuilder sb = new StringBuilder();
 		sb.append(prefix);
-		sb.append("insert.do");
+		sb.append("insert");
 		Method method = new Method("insert");
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.addAnnotation("@ResponseBody");
@@ -443,7 +436,7 @@ public class AnywidePlugin extends PluginAdapter {
 	private Method delete(IntrospectedTable introspectedTable, String tableName) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(prefix);
-		sb.append("delete.do");
+		sb.append("delete");
 		Method method = new Method("delete");
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.addAnnotation("@ResponseBody");
@@ -748,13 +741,13 @@ public class AnywidePlugin extends PluginAdapter {
 
 	private void createValidatorMapping(XmlElement vms, IntrospectedTable introspectedTable, String tableName) {
 		if (this.enableInsert)
-			createValidatorMapping(vms, prefix + toLowerCase(tableName) + prefix + "insert.do", introspectedTable,
+			createValidatorMapping(vms, prefix + toLowerCase(tableName) + prefix + "insert", introspectedTable,
 					tableName, false, true);
 		if (this.enableUpdate)
-			createValidatorMapping(vms, prefix + toLowerCase(tableName) + prefix + "update.do", introspectedTable,
+			createValidatorMapping(vms, prefix + toLowerCase(tableName) + prefix + "update", introspectedTable,
 					tableName, true, true);
 		if (this.enableDelete)
-			createValidatorMapping(vms, prefix + toLowerCase(tableName) + prefix + "delete.do", introspectedTable,
+			createValidatorMapping(vms, prefix + toLowerCase(tableName) + prefix + "delete", introspectedTable,
 					tableName, true, false);
 	}
 
