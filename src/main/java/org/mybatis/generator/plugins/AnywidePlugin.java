@@ -112,20 +112,18 @@ public class AnywidePlugin extends PluginAdapter {
 		pojoUrl = context.getJavaModelGeneratorConfiguration().getTargetPackage();
 
 		serviceAnnotationType = new FullyQualifiedJavaType("com.anywide.dawdler.core.annotation.Service");
-		controllerAnnotationType = new FullyQualifiedJavaType(
-			 "com.anywide.dawdler.clientplug.annotation.Controller");
+		controllerAnnotationType = new FullyQualifiedJavaType("com.anywide.dawdler.clientplug.annotation.Controller");
 		responseBodyAnnotationType = new FullyQualifiedJavaType(
-			 "com.anywide.dawdler.clientplug.annotation.ResponseBody");
+				"com.anywide.dawdler.clientplug.annotation.ResponseBody");
 		requestMappingAnnotationType = new FullyQualifiedJavaType(
-			 "com.anywide.dawdler.clientplug.annotation.RequestMapping");
-		remoteServiceAnnotationType = new FullyQualifiedJavaType(
-			 "com.anywide.dawdler.core.annotation.RemoteService");
+				"com.anywide.dawdler.clientplug.annotation.RequestMapping");
+		remoteServiceAnnotationType = new FullyQualifiedJavaType("com.anywide.dawdler.core.annotation.RemoteService");
 		repositoryAnnotationType = new FullyQualifiedJavaType(
-			 "com.anywide.dawdler.serverplug.db.annotation.Repository");
+				"com.anywide.dawdler.serverplug.db.annotation.Repository");
 		dBTransactionAnnotationType = new FullyQualifiedJavaType(
-			 "com.anywide.dawdler.serverplug.db.annotation.DBTransaction");
+				"com.anywide.dawdler.serverplug.db.annotation.DBTransaction");
 		dBTransactionMODEType = new FullyQualifiedJavaType(
-			 "com.anywide.dawdler.serverplug.db.annotation.DBTransaction.MODE");
+				"com.anywide.dawdler.serverplug.db.annotation.DBTransaction.MODE");
 		return true;
 	}
 
@@ -153,7 +151,7 @@ public class AnywidePlugin extends PluginAdapter {
 		listType = new FullyQualifiedJavaType("java.util.List");
 
 		requestMethodType = new FullyQualifiedJavaType(
-			 "com.anywide.dawdler.clientplug.annotation.RequestMapping.RequestMethod");
+				"com.anywide.dawdler.clientplug.annotation.RequestMapping.RequestMethod");
 
 		pageResultType = new FullyQualifiedJavaType("com.anywide.dawdler.clientplug.web.result.PageResult");
 		pojoListType = new FullyQualifiedJavaType("List");
