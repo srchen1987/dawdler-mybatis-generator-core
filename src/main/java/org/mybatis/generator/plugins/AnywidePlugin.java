@@ -478,12 +478,12 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append("if(count > 0){");
 		sb.append("\n         ");
 		sb.append("baseResult = ");
-		sb.append("new BaseResult<>(\"插入成功!\", true);");
+		sb.append("new BaseResult<>(\"删除成功!\", true);");
 		sb.append("\n        ");
 		sb.append("}else{");
 		sb.append("\n         ");
 		sb.append("baseResult = ");
-		sb.append("new BaseResult<>(\"插入失败!\", false);");
+		sb.append("new BaseResult<>(\"删除失败!\", false);");
 		sb.append("\n        ");
 		sb.append("}");
 		sb.append("\n        ");
