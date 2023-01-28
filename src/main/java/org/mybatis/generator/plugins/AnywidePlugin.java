@@ -1036,6 +1036,8 @@ public class AnywidePlugin extends PluginAdapter {
 		topLevelClass.addImportedType(serviceType);
 		topLevelClass.addImportedType(pojoType);
 		topLevelClass.addImportedType(listType);
+		topLevelClass.addImportedType(mapType);
+		topLevelClass.addImportedType(FullyQualifiedJavaType.getNewHashMapInstance());
 		if (introspectedTable.getPrimaryKeyColumns().size() > 1)
 			topLevelClass.addImportedType(new FullyQualifiedJavaType(pojoType.getFullyQualifiedName().concat("Key")));
 	}
