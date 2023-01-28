@@ -45,6 +45,7 @@ public class AnywidePlugin extends PluginAdapter {
 	private FullyQualifiedJavaType pageResultType;
 	private FullyQualifiedJavaType baseResultType;
 	private FullyQualifiedJavaType pojoListType;
+	private FullyQualifiedJavaType mapType;
 	private FullyQualifiedJavaType remoteServiceAnnotationType;
 
 	private String controllerPack;
@@ -148,8 +149,11 @@ public class AnywidePlugin extends PluginAdapter {
 		// 分页
 		pageType = new FullyQualifiedJavaType("com.anywide.dawdler.serverplug.load.bean.Page");
 		// list
-		listType = new FullyQualifiedJavaType("java.util.List");
+		listType = FullyQualifiedJavaType.getNewListInstance();
 
+		mapType = FullyQualifiedJavaType.getNewMapInstance();
+		mapType.addTypeArgument(FullyQualifiedJavaType.getStringInstance());
+		mapType.addTypeArgument(FullyQualifiedJavaType.getObjectInstance());
 		requestMethodType = new FullyQualifiedJavaType(
 				"com.anywide.dawdler.clientplug.annotation.RequestMapping.RequestMethod");
 
@@ -244,6 +248,7 @@ public class AnywidePlugin extends PluginAdapter {
 
 	private Method selectList(IntrospectedTable introspectedTable, String tableName) {
 		String lowerFirstName = lowerFirst(tableName);
+		String mapName = lowerFirstName + "Map";
 		String listName = lowerFirstName + "List";
 		StringBuilder sb = new StringBuilder();
 		sb.append(prefix);
@@ -253,29 +258,34 @@ public class AnywidePlugin extends PluginAdapter {
 		method.setVisibility(JavaVisibility.PUBLIC);
 		method.addAnnotation("@ResponseBody");
 		method.addAnnotation("@RequestMapping(value=\"" + sb + "\", method = RequestMethod.GET)");
-		method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "pageOn"));
-		method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "row"));
+		method.addParameter(new Parameter(FullyQualifiedJavaType.getIntegerInstance(), "pageOn"));
+		method.addParameter(new Parameter(FullyQualifiedJavaType.getIntegerInstance(), "row"));
 		method.addParameter(new Parameter(pojoType, lowerFirstName));
 		method.setReturnType(pageResultType);
 		sb = new StringBuilder();
-		sb.append("Page page = new Page(pageOn, row);");
 		sb.append("\n        ");
-		sb.append(pojoListType.getShortName());
+		sb.append("Map<String, Object>");
 		sb.append(" ");
-		sb.append(listName);
+		sb.append(mapName);
 		sb.append(" = ");
 		sb.append(getServiceShort());
 		sb.append("selectPageList");
 		sb.append("(");
 		sb.append(lowerFirstName);
 		sb.append(", ");
-		sb.append("page");
+		sb.append("pageOn");
+		sb.append(", ");
+		sb.append("row");
 		sb.append(");");
+		sb.append("\n        ");
+		sb.append("Page page = (Page)"+mapName+".get(\"page\");");
+		sb.append("\n        ");
+		sb.append(pojoListType.getShortName()+" "+listName+" = ("+pojoListType.getShortName()+")"+mapName+".get(\""+listName+"\");");
 		sb.append("\n        ");
 		sb.append("PageResult<");
 		sb.append(pojoListType.getShortName());
 		sb.append("> ");
-		sb.append("pageResult = new PageResult<>(" + listName + ", page, true);");
+		sb.append("pageResult = new PageResult<>(" + listName + ", page);");
 		sb.append("\n        ");
 		sb.append("return pageResult;");
 		method.addBodyLine(sb.toString());
@@ -537,6 +547,7 @@ public class AnywidePlugin extends PluginAdapter {
 	 */
 	private void addControllerImport(TopLevelClass topLevelClass) {
 		topLevelClass.addImportedType(listType);
+		topLevelClass.addImportedType(mapType);
 		topLevelClass.addImportedType(serviceType);
 		topLevelClass.addImportedType(pageType);
 		topLevelClass.addImportedType(pojoType);
@@ -762,7 +773,7 @@ public class AnywidePlugin extends PluginAdapter {
 	private void addService(Interface _interface, IntrospectedTable introspectedTable, String tableName,
 			List<GeneratedJavaFile> files) {
 		_interface.addImportedType(remoteServiceAnnotationType);
-		_interface.addImportedType(listType);
+		_interface.addImportedType(mapType);
 		_interface.setVisibility(JavaVisibility.PUBLIC);
 		_interface.addAnnotation("@RemoteService(\"" + chanelGroupId + "\")");
 		// 添加方法
@@ -783,7 +794,6 @@ public class AnywidePlugin extends PluginAdapter {
 		}
 		if (this.enableList) {
 			method = selectPageList(introspectedTable, tableName);
-			// method.removeAllBodyLines();
 			method.getBodyLines().clear();
 			method.setAbstract(true);
 			context.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
@@ -799,7 +809,6 @@ public class AnywidePlugin extends PluginAdapter {
 		}
 		if (this.enableInsert) {
 			method = getOtherInsertboolean("insertSelective", introspectedTable, tableName);
-			// method.removeAllBodyLines();
 			method.getBodyLines().clear();
 			method.setAbstract(true);
 			context.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
@@ -879,8 +888,9 @@ public class AnywidePlugin extends PluginAdapter {
 		String lowerFirstName = lowerFirst(tableName);
 		Method method = new Method("selectPageList");
 		method.addParameter(0, new Parameter(pojoType, lowerFirstName));
-		method.addParameter(1, new Parameter(pageType, "page"));
-		method.setReturnType(pojoListType);
+		method.addParameter(1, new Parameter(FullyQualifiedJavaType.getIntegerInstance(), "pageOn"));
+		method.addParameter(2, new Parameter(FullyQualifiedJavaType.getIntegerInstance(), "row"));
+		method.setReturnType(mapType);
 		method.setVisibility(JavaVisibility.PUBLIC);
 		String listName = lowerFirstName + "List";
 		StringBuilder sb = new StringBuilder();
@@ -890,6 +900,8 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append("(");
 		sb.append(lowerFirstName);
 		sb.append(");");
+		sb.append("\n        ");
+		sb.append("Page page = new Page(pageOn, row);");
 		sb.append("\n        ");
 		sb.append("page.setRowCountAndCompute(rowCount);");
 		sb.append("\n        ");
@@ -906,9 +918,13 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append(lowerFirstName);
 		sb.append(", page);");
 		sb.append("\n        ");
-		sb.append("return ");
-		sb.append(listName);
-		sb.append(";");
+		sb.append("Map<String, Object> result = new HashMap<>();");
+		sb.append("\n        ");
+		sb.append("result.put(\"page\", page);");
+		sb.append("\n        ");
+		sb.append("result.put(\""+listName+"\", "+listName+");");
+		sb.append("\n        ");
+		sb.append("return result;");
 		method.addBodyLine(sb.toString());
 		return method;
 	}
@@ -1014,7 +1030,7 @@ public class AnywidePlugin extends PluginAdapter {
 	private void addServiceImport(Interface interfaces, TopLevelClass topLevelClass,
 			IntrospectedTable introspectedTable) {
 		interfaces.addImportedType(pojoType);
-		interfaces.addImportedType(pageType);
+		interfaces.addImportedType(mapType);
 		topLevelClass.addImportedType(daoType);
 		topLevelClass.addImportedType(pageType);
 		topLevelClass.addImportedType(serviceType);
