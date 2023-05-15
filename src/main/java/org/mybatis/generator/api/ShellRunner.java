@@ -56,7 +56,6 @@ public class ShellRunner {
 			System.exit(0);
 			return; // only to satisfy compiler, never returns
 		}
-
 		Map<String, String> arguments = parseCommandLine(args);
 
 		if (arguments.containsKey(HELP_1)) {
