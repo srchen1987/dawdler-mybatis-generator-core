@@ -145,7 +145,7 @@ public class AnywidePlugin extends PluginAdapter {
 		daoType = new FullyQualifiedJavaType(introspectedTable.getMyBatis3JavaMapperType());
 
 		pojoType = new FullyQualifiedJavaType(
-				pojoUrl + "." + tableName + (introspectedTable.getBLOBColumns().size() > 0 ? "WithBLOBs" : ""));
+				pojoUrl + "." + tableName);
 		// 分页
 		pageType = new FullyQualifiedJavaType("com.anywide.dawdler.serverplug.load.bean.Page");
 		// list
@@ -860,8 +860,6 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append("\n        ");
 		sb.append("List<");
 		sb.append(pojoType.getShortName());
-		if (introspectedTable.getBLOBColumns().size() > 0)
-			sb.append("WithBLOBs");
 		sb.append("> ");
 		sb.append(listName);
 		sb.append(" = ");
@@ -874,8 +872,6 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append("PageResult<");
 		sb.append("List<");
 		sb.append(pojoType.getShortName());
-		if (introspectedTable.getBLOBColumns().size() > 0)
-			sb.append("WithBLOBs");
 		sb.append("> ");
 		sb.append("> ");
 		sb.append("pageResult = new PageResult<>("+listName+", page);");
@@ -900,8 +896,6 @@ public class AnywidePlugin extends PluginAdapter {
 		method.setVisibility(JavaVisibility.PUBLIC);
 		StringBuilder sb = new StringBuilder();
 		sb.append(pojoType.getShortName());
-		if (introspectedTable.getBLOBColumns().size() > 0)
-			sb.append("WithBLOBs");
 		sb.append(" ");
 		sb.append(toLowerCase(pojoType.getShortName()));
 		sb.append(" = ");
