@@ -537,11 +537,14 @@ public class AnywidePlugin extends PluginAdapter {
 		String fileName = tableName + "Controller-validator.xml";
 		Document document = new Document();
 		XmlElement root = new XmlElement("validator");
+		root.addAttribute(new Attribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance"));
+		root.addAttribute(new Attribute("xmlns", XmlConstants.ANYWIDE_CONTROLLER_XMLNS));
 		if (this.schemaLocation != null && !"".equals(this.schemaLocation)) {
-			root.addAttribute(new Attribute("xmlns:xsi", XmlConstants.ANYWIDE_CONTROLLER_XMLNS));
-			root.addAttribute(new Attribute("xmlns", XmlConstants.ANYWIDE_CONTROLLER_XMLNS));
 			root.addAttribute(new Attribute("xsi:schemaLocation",
 					XmlConstants.ANYWIDE_CONTROLLER_XMLNS + " " + this.schemaLocation));
+		}else {
+			root.addAttribute(new Attribute("xsi:schemaLocation",
+					XmlConstants.ANYWIDE_CONTROLLER_XMLNS + "  https://cdn.jsdelivr.net/gh/srchen1987/dawdler-series-xsd@main/client-conf.xsd"));
 		}
 		XmlElement vfs = new XmlElement("validator-fields");
 		for (IntrospectedColumn column : introspectedTable.getAllColumns()) {
@@ -574,7 +577,7 @@ public class AnywidePlugin extends PluginAdapter {
 		if (introspectedTable.hasPrimaryKeyColumns()) {
 			for (IntrospectedColumn column : introspectedTable.getBaseColumns()) {
 				XmlElement v = new XmlElement("validator");
-				v.addAttribute(new Attribute("ref", column.getActualColumnName()));
+				v.addAttribute(new Attribute("ref", column.getJavaProperty()));
 				vf.addElement(v);
 			}
 		} else {
@@ -585,7 +588,7 @@ public class AnywidePlugin extends PluginAdapter {
 					continue;
 				}
 				XmlElement v = new XmlElement("validator");
-				v.addAttribute(new Attribute("ref", column.getActualColumnName()));
+				v.addAttribute(new Attribute("ref", column.getJavaProperty()));
 				vf.addElement(v);
 			}
 		}

@@ -41,5 +41,5 @@ public class XmlConstants {
 
 	public static final String MYBATIS_GENERATOR_CONFIG_PUBLIC_ID = "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"; //$NON-NLS-1$
 
-	public static final String ANYWIDE_CONTROLLER_XMLNS = "http://www.anywide1948.com";
+	public static final String ANYWIDE_CONTROLLER_XMLNS = "https://github.com/srchen1987/dawdler-series";
 }
