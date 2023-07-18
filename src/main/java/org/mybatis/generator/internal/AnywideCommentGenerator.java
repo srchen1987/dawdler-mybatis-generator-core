@@ -217,12 +217,8 @@ public class AnywideCommentGenerator implements CommentGenerator {
 				+ calendar.get(Calendar.DATE);
 		StringBuilder sb = new StringBuilder();
 		method.addJavaDocLine("/** "); //$NON-NLS-1$
-		method.addJavaDocLine(" * ");
-		sb.append(" * @Title ");
-		sb.append(method.getName());
-		method.addJavaDocLine(sb.toString());
-		sb.setLength(0);
-		sb.append(" * @Description ");
+		method.addJavaDocLine("  * ");
+		sb.append("  * ");
 		if (prefix != null)
 			sb.append(prefix);
 		if (introspectedTable.getRemarks() != null && !"".equals(introspectedTable.getRemarks().trim())) {
@@ -275,7 +271,7 @@ public class AnywideCommentGenerator implements CommentGenerator {
 
 		sb.setLength(0);
 		sb.append(" * @return "); //$NON-NLS-1$
-		sb.append(introspectedColumn.getActualColumnName());
+		sb.append(introspectedColumn.getJavaProperty());
 		method.addJavaDocLine(sb.toString());
 		method.addJavaDocLine(" */"); //$NON-NLS-1$
 	}
