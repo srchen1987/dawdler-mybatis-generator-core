@@ -113,11 +113,11 @@ public class AnywidePlugin extends PluginAdapter {
 		pojoUrl = context.getJavaModelGeneratorConfiguration().getTargetPackage();
 
 		serviceAnnotationType = new FullyQualifiedJavaType("com.anywide.dawdler.core.annotation.Service");
-		controllerAnnotationType = new FullyQualifiedJavaType("com.anywide.dawdler.clientplug.annotation.Controller");
+		controllerAnnotationType = new FullyQualifiedJavaType("com.anywide.dawdler.clientplug.web.annotation.Controller");
 		responseBodyAnnotationType = new FullyQualifiedJavaType(
-				"com.anywide.dawdler.clientplug.annotation.ResponseBody");
+				"com.anywide.dawdler.clientplug.web.annotation.ResponseBody");
 		requestMappingAnnotationType = new FullyQualifiedJavaType(
-				"com.anywide.dawdler.clientplug.annotation.RequestMapping");
+				"com.anywide.dawdler.clientplug.web.annotation.RequestMapping");
 		remoteServiceAnnotationType = new FullyQualifiedJavaType("com.anywide.dawdler.core.annotation.RemoteService");
 		repositoryAnnotationType = new FullyQualifiedJavaType(
 				"com.anywide.dawdler.serverplug.db.annotation.Repository");
@@ -152,7 +152,7 @@ public class AnywidePlugin extends PluginAdapter {
 		listType = FullyQualifiedJavaType.getNewListInstance();
 
 		requestMethodType = new FullyQualifiedJavaType(
-				"com.anywide.dawdler.clientplug.annotation.RequestMapping.RequestMethod");
+				"com.anywide.dawdler.clientplug.web.annotation.RequestMapping.RequestMethod");
 
 		pageResultType = new FullyQualifiedJavaType("com.anywide.dawdler.core.result.PageResult");
 		pojoListType = new FullyQualifiedJavaType("List");
