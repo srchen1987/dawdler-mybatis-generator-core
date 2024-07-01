@@ -193,9 +193,13 @@ public class MyBatisGeneratorConfigurationParser {
 		context.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
 
 		Properties attributes = parseAttributes(node);
-		String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
-		String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
-
+		String targetPackage = attributes.getProperty("targetPackage");
+		//jackson.song change  targetProject to  serviceProject
+		String targetProject = attributes.getProperty("targetProject");
+		if(targetProject.equals("none")) {
+			String serviceProject = (String) context.getProperties().get("serviceProject");
+			targetProject = serviceProject;
+		}
 		sqlMapGeneratorConfiguration.setTargetPackage(targetPackage);
 		sqlMapGeneratorConfiguration.setTargetProject(targetProject);
 
@@ -554,8 +558,12 @@ public class MyBatisGeneratorConfigurationParser {
 
 		Properties attributes = parseAttributes(node);
 		String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
+		//jackson.song change  targetProject to  apiProject
 		String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
-
+		if(targetProject.equals("none")) {
+			String apiProject = (String) context.getProperties().get("apiProject");
+			targetProject = apiProject;
+		}
 		javaModelGeneratorConfiguration.setTargetPackage(targetPackage);
 		javaModelGeneratorConfiguration.setTargetProject(targetProject);
 
@@ -581,8 +589,12 @@ public class MyBatisGeneratorConfigurationParser {
 		Properties attributes = parseAttributes(node);
 		String type = attributes.getProperty("type"); //$NON-NLS-1$
 		String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
-		String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
-
+		//jackson.song change  targetProject to  serviceProject
+		String targetProject = attributes.getProperty("targetProject");
+		if(targetProject.equals("none")) {
+			String serviceProject = (String) context.getProperties().get("serviceProject");
+			targetProject = serviceProject;
+		}
 		javaClientGeneratorConfiguration.setConfigurationType(type);
 		javaClientGeneratorConfiguration.setTargetPackage(targetPackage);
 		javaClientGeneratorConfiguration.setTargetProject(targetProject);
