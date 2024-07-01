@@ -114,7 +114,6 @@ public class MapperConfigPlugin extends PluginAdapter {
 			mapper.addAttribute(new Attribute("resource", mapperFile)); //$NON-NLS-1$
 			mappers.addElement(mapper);
 		}
-
 		GeneratedXmlFile gxf = new GeneratedXmlFile(document, properties.getProperty("fileName", "MapperConfig.xml"), //$NON-NLS-1$ //$NON-NLS-2$
 				properties.getProperty("targetPackage"), //$NON-NLS-1$
 				properties.getProperty("targetProject"), //$NON-NLS-1$
