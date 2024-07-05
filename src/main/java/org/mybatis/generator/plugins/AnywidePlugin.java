@@ -771,7 +771,7 @@ public class AnywidePlugin extends PluginAdapter {
 			_interface.addMethod(method);
 		}
 		if (this.enableInsert) {
-			method = getOtherInsertboolean("insertSelective", introspectedTable, tableName);
+			method = getOtherInsertBoolean("insertSelective", introspectedTable, tableName);
 			method.getBodyLines().clear();
 			method.setAbstract(true);
 			context.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
@@ -825,7 +825,7 @@ public class AnywidePlugin extends PluginAdapter {
 			topLevelClass.addMethod(method);
 		}
 		if (this.enableInsert) {
-			method = getOtherInsertboolean("insertSelective", introspectedTable, tableName);
+			method = getOtherInsertBoolean("insertSelective", introspectedTable, tableName);
 			method.addAnnotation("@Override");
 			method.addAnnotation("@DBTransaction(mode=MODE.forceReadOnWrite)");
 			topLevelClass.addMethod(method);
@@ -874,14 +874,7 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append(lowerFirstName);
 		sb.append(", page);");
 		sb.append("\n        ");
-		sb.append("PageResult<");
-		sb.append("List<");
-		sb.append(pojoType.getShortName());
-		sb.append("> ");
-		sb.append("> ");
-		sb.append("pageResult = new PageResult<>("+listName+", page);");
-		sb.append("\n        ");
-		sb.append("return pageResult;");
+		sb.append("return new PageResult<>("+listName+", page);");
 		method.addBodyLine(sb.toString());
 		return method;
 	}
@@ -889,7 +882,7 @@ public class AnywidePlugin extends PluginAdapter {
 	private Method selectByPrimaryKey(IntrospectedTable introspectedTable, String tableName) {
 		Method method = new Method("selectByPrimaryKey");
 		method.setReturnType(baseResultType);
-		if (introspectedTable.getPrimaryKeyColumns().size() > 0) {
+		if (!introspectedTable.getPrimaryKeyColumns().isEmpty()) {
 			for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
 				FullyQualifiedJavaType type = introspectedColumn.getFullyQualifiedJavaType();
 				method.addParameter(new Parameter(type, introspectedColumn.getJavaProperty()));
@@ -917,12 +910,7 @@ public class AnywidePlugin extends PluginAdapter {
 		}
 		sb.append(");");
 		sb.append("\n        ");
-		sb.append("BaseResult<"+pojoType.getShortName()+"> ");
-		sb.append("baseResult");
-		sb.append(" = ");
-		sb.append("new BaseResult<>("+toLowerCase(pojoType.getShortName())+");");
-		sb.append("\n        ");
-		sb.append("return baseResult;");
+		sb.append("return new BaseResult<>("+toLowerCase(pojoType.getShortName())+");");
 		method.addBodyLine(sb.toString());
 		return method;
 	}
@@ -950,7 +938,7 @@ public class AnywidePlugin extends PluginAdapter {
 		return method;
 	}
 
-	private Method getOtherInsertboolean(String methodName, IntrospectedTable introspectedTable, String tableName) {
+	private Method getOtherInsertBoolean(String methodName, IntrospectedTable introspectedTable, String tableName) {
 		Method method = new Method(methodName);
 		method.setReturnType(FullyQualifiedJavaType.getIntInstance());
 		method.addParameter(new Parameter(pojoType, toLowerCase(tableName)));
