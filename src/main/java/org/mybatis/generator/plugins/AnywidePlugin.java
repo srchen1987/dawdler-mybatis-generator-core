@@ -85,7 +85,7 @@ public class AnywidePlugin extends PluginAdapter {
 		chanelGroupId = properties.getProperty("chanelGroupId");
 		String serviceType = (String) context.getProperties().get("serviceType");
 		boolean localService = true;
-		if(serviceType != null && serviceType.equals("remote")) {
+		if (serviceType != null && serviceType.equals("remote")) {
 			localService = false;
 		}
 		if (StringUtility.stringHasValue(enableInfo))
@@ -112,13 +112,16 @@ public class AnywidePlugin extends PluginAdapter {
 		webProject = (String) context.getProperties().get("webProject");
 		schemaLocation = properties.getProperty("schemaLocation");
 		pojoUrl = context.getJavaModelGeneratorConfiguration().getTargetPackage();
-		if(localService) {
-			localOrRemoteServiceAnnotationType = new FullyQualifiedJavaType("com.anywide.dawdler.local.service.annotation.LocalService");
-		}else {
-			localOrRemoteServiceAnnotationType = new FullyQualifiedJavaType("com.anywide.dawdler.remote.service.annotation.RemoteService");
+		if (localService) {
+			localOrRemoteServiceAnnotationType = new FullyQualifiedJavaType(
+					"com.anywide.dawdler.local.service.annotation.LocalService");
+		} else {
+			localOrRemoteServiceAnnotationType = new FullyQualifiedJavaType(
+					"com.anywide.dawdler.remote.service.annotation.RemoteService");
 		}
 
-		controllerAnnotationType = new FullyQualifiedJavaType("com.anywide.dawdler.clientplug.web.annotation.Controller");
+		controllerAnnotationType = new FullyQualifiedJavaType(
+				"com.anywide.dawdler.clientplug.web.annotation.Controller");
 		responseBodyAnnotationType = new FullyQualifiedJavaType(
 				"com.anywide.dawdler.clientplug.web.annotation.ResponseBody");
 		requestMappingAnnotationType = new FullyQualifiedJavaType(
@@ -148,9 +151,13 @@ public class AnywidePlugin extends PluginAdapter {
 		serviceImplType = new FullyQualifiedJavaType(serviceImplPack + "." + tableName + "ServiceImpl");
 		// dao
 		daoType = new FullyQualifiedJavaType(introspectedTable.getMyBatis3JavaMapperType());
-
-		pojoType = new FullyQualifiedJavaType(
-				pojoUrl + "." + tableName);
+		if (introspectedTable.hasBLOBColumns()) {
+			pojoType = new FullyQualifiedJavaType(
+					pojoUrl + "." + tableName + "WithBLOBs");
+		} else {
+			pojoType = new FullyQualifiedJavaType(
+					pojoUrl + "." + tableName);
+		}
 		// 分页
 		pageType = new FullyQualifiedJavaType("com.anywide.dawdler.serverplug.load.bean.Page");
 		// list
@@ -202,7 +209,7 @@ public class AnywidePlugin extends PluginAdapter {
 		topLevelClass.addAnnotation("@RequestMapping(\"" + prefix + toLowerCase(tableName) + "\")");
 		topLevelClass.addImportedType(controllerAnnotationType);
 		// 添加引用service
-		addField(topLevelClass, serviceType, "@"+localOrRemoteServiceAnnotationType.getShortName());
+		addField(topLevelClass, serviceType, "@" + localOrRemoteServiceAnnotationType.getShortName());
 		// 添加方法
 		Method method = null;
 
@@ -480,37 +487,38 @@ public class AnywidePlugin extends PluginAdapter {
 	 */
 	private String addParams(IntrospectedTable introspectedTable, Method method, String tableName, int typeValue) {
 		switch (typeValue) {
-		case 1:
-			method.addParameter(new Parameter(pojoType, toLowerCase(tableName)));
-			return "record";
-		case 2:
-			StringBuilder sb = new StringBuilder();
-			if (introspectedTable.getRules().generatePrimaryKeyClass()) {
-				for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
-					FullyQualifiedJavaType type = introspectedColumn.getFullyQualifiedJavaType();
-					method.addParameter(new Parameter(type, introspectedColumn.getJavaProperty()));
-				}
+			case 1:
+				method.addParameter(new Parameter(pojoType, toLowerCase(tableName)));
+				return "record";
+			case 2:
+				StringBuilder sb = new StringBuilder();
+				if (introspectedTable.getRules().generatePrimaryKeyClass()) {
+					for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
+						FullyQualifiedJavaType type = introspectedColumn.getFullyQualifiedJavaType();
+						method.addParameter(new Parameter(type, introspectedColumn.getJavaProperty()));
+					}
 
-				for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
-					sb.append(introspectedColumn.getJavaProperty());
-					sb.append(",");
+					for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
+						sb.append(introspectedColumn.getJavaProperty());
+						sb.append(",");
+					}
+					sb.setLength(sb.length() - 1);
+				} else {
+					FullyQualifiedJavaType type = introspectedTable.getAllColumns().get(0).getFullyQualifiedJavaType();
+					method.addParameter(
+							new Parameter(type, introspectedTable.getAllColumns().get(0).getJavaProperty()));
+					sb.append(introspectedTable.getAllColumns().get(0).getJavaProperty());
 				}
-				sb.setLength(sb.length() - 1);
-			} else {
-				FullyQualifiedJavaType type = introspectedTable.getAllColumns().get(0).getFullyQualifiedJavaType();
-				method.addParameter(new Parameter(type, introspectedTable.getAllColumns().get(0).getJavaProperty()));
-				sb.append(introspectedTable.getAllColumns().get(0).getJavaProperty());
-			}
-			return sb.toString();
-		case 3:
-			method.addParameter(new Parameter(pojoCriteriaType, "example"));
-			return "example";
-		case 4:
-			method.addParameter(0, new Parameter(pojoType, "record"));
-			method.addParameter(1, new Parameter(pojoCriteriaType, "example"));
-			return "record, example";
-		default:
-			break;
+				return sb.toString();
+			case 3:
+				method.addParameter(new Parameter(pojoCriteriaType, "example"));
+				return "example";
+			case 4:
+				method.addParameter(0, new Parameter(pojoType, "record"));
+				method.addParameter(1, new Parameter(pojoCriteriaType, "example"));
+				return "record, example";
+			default:
+				break;
 		}
 		return null;
 	}
@@ -553,9 +561,10 @@ public class AnywidePlugin extends PluginAdapter {
 		if (this.schemaLocation != null && !"".equals(this.schemaLocation)) {
 			root.addAttribute(new Attribute("xsi:schemaLocation",
 					XmlConstants.ANYWIDE_CONTROLLER_XMLNS + " " + this.schemaLocation));
-		}else {
+		} else {
 			root.addAttribute(new Attribute("xsi:schemaLocation",
-					XmlConstants.ANYWIDE_CONTROLLER_XMLNS + "  https://cdn.jsdelivr.net/gh/srchen1987/dawdler-series-xsd@main/controller-validator.xsd"));
+					XmlConstants.ANYWIDE_CONTROLLER_XMLNS
+							+ "  https://cdn.jsdelivr.net/gh/srchen1987/dawdler-series-xsd@main/controller-validator.xsd"));
 		}
 		XmlElement vfs = new XmlElement("validator-fields");
 		for (IntrospectedColumn column : introspectedTable.getAllColumns()) {
@@ -629,70 +638,70 @@ public class AnywidePlugin extends PluginAdapter {
 		}
 		int length = column.getLength();
 		switch (num) {
-		case -7:// BIT
-		case -6:// TINYINT
-		case 5:// SMALLINT
-		case 4:// INTEGER
-		case -5:// BIGINT
-			sb.append("number");
-			break;
-		case 6:// FLOAT
-		case 7:// REAL
-		case 8:// DOUBLE
-		case 2:// NUMERIC
-		case 3:// DECIMAL
-			sb.append("realNumber");
-			break;
-		case 1:// CHAR
-		case 12:// VARCHAR
-		case -1:// LONGVARCHAR
-			sb.append("maxSize:" + length);
-			break;
-		case 91:// DATE
-			break;
-		case 92:// TIME
-			break;
-		case 93:// TIMESTAMP
-			break;
-		case -2:// BINARY
-			break;
-		case -3:// VARBINARY
-			break;
-		case -4:// LONGVARBINARY
-			break;
-		case 0:// NULL
-			break;
-		case 1111:// OTHER
-			break;
-		case 2000:// JAVA_OBJECT
-			break;
-		case 2001:// DISTINCT
-			break;
-		case 2002:// STRUCT
-			break;
-		case 2003:// ARRAY
-			break;
-		case 2004:// BLOB
-			break;
-		case 2005:// CLOB
-			break;
-		case 2006:// REF
-			break;
-		case 70:// DATALINK
-			break;
-		case 16:// BOOLEAN
-			break;
-		case -8:// ROWID
-			break;
-		case -15:// NCHAR
-		case -9:// NVARCHAR
-		case -16:// LONGNVARCHAR
-			sb.append("maxSize:" + length);
-			break;
-		case 2011:// NCLOB
-			break;
-		case 2009:// SQLXML
-			break;
+			case -7:// BIT
+			case -6:// TINYINT
+			case 5:// SMALLINT
+			case 4:// INTEGER
+			case -5:// BIGINT
+				sb.append("number");
+				break;
+			case 6:// FLOAT
+			case 7:// REAL
+			case 8:// DOUBLE
+			case 2:// NUMERIC
+			case 3:// DECIMAL
+				sb.append("realNumber");
+				break;
+			case 1:// CHAR
+			case 12:// VARCHAR
+			case -1:// LONGVARCHAR
+				sb.append("maxSize:" + length);
+				break;
+			case 91:// DATE
+				break;
+			case 92:// TIME
+				break;
+			case 93:// TIMESTAMP
+				break;
+			case -2:// BINARY
+				break;
+			case -3:// VARBINARY
+				break;
+			case -4:// LONGVARBINARY
+				break;
+			case 0:// NULL
+				break;
+			case 1111:// OTHER
+				break;
+			case 2000:// JAVA_OBJECT
+				break;
+			case 2001:// DISTINCT
+				break;
+			case 2002:// STRUCT
+				break;
+			case 2003:// ARRAY
+				break;
+			case 2004:// BLOB
+				break;
+			case 2005:// CLOB
+				break;
+			case 2006:// REF
+				break;
+			case 70:// DATALINK
+				break;
+			case 16:// BOOLEAN
+				break;
+			case -8:// ROWID
+				break;
+			case -15:// NCHAR
+			case -9:// NVARCHAR
+			case -16:// LONGNVARCHAR
+				sb.append("maxSize:" + length);
+				break;
+			case 2011:// NCLOB
+				break;
+			case 2009:// SQLXML
+				break;
 		}
 		return sb.toString();
 	}
@@ -874,7 +883,7 @@ public class AnywidePlugin extends PluginAdapter {
 		sb.append(lowerFirstName);
 		sb.append(", page);");
 		sb.append("\n        ");
-		sb.append("return new PageResult<>("+listName+", page);");
+		sb.append("return new PageResult<>(" + listName + ", page);");
 		method.addBodyLine(sb.toString());
 		return method;
 	}
@@ -910,7 +919,7 @@ public class AnywidePlugin extends PluginAdapter {
 		}
 		sb.append(");");
 		sb.append("\n        ");
-		sb.append("return new BaseResult<>("+toLowerCase(pojoType.getShortName())+");");
+		sb.append("return new BaseResult<>(" + toLowerCase(pojoType.getShortName()) + ");");
 		method.addBodyLine(sb.toString());
 		return method;
 	}
