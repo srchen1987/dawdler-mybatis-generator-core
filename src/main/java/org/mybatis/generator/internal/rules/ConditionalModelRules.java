@@ -71,8 +71,8 @@ public class ConditionalModelRules extends BaseRules {
 	}
 
 	/**
-	 * We generate a record with BLOBs class if there is more than one BLOB column.
-	 * Do not generate a BLOBs class if any other super class would only contain one
+	 * We generate a record with BLOBs class if there is more than two BLOB column.
+	 * Do not generate a BLOBs class if any other super class would only contain two
 	 * field
 	 *
 	 * @return true if the record with BLOBs class should be generated
@@ -82,6 +82,6 @@ public class ConditionalModelRules extends BaseRules {
 		int otherColumnCount = introspectedTable.getPrimaryKeyColumns().size()
 				+ introspectedTable.getBaseColumns().size();
 
-		return otherColumnCount > 1 && introspectedTable.getBLOBColumns().size() > 1;
+		return otherColumnCount > 0 && introspectedTable.getBLOBColumns().size() > 0;
 	}
 }
