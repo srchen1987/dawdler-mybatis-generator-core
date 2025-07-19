@@ -18,7 +18,7 @@ public class SelectPageListMethodGenerator extends AbstractJavaMapperMethodGener
 	public SelectPageListMethodGenerator(boolean isSimple) {
 		this.isSimple = isSimple;
 		this.paramAnnotationType = new FullyQualifiedJavaType("org.apache.ibatis.annotations.Param");
-		this.pageType = new FullyQualifiedJavaType("com.anywide.dawdler.serverplug.load.bean.Page");
+		this.pageType = new FullyQualifiedJavaType("club.dawdler.serverplug.load.bean.Page");
 	}
 
 	public void addInterfaceElements(Interface interfaze) {

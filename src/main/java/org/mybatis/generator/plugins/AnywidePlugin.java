@@ -114,25 +114,25 @@ public class AnywidePlugin extends PluginAdapter {
 		pojoUrl = context.getJavaModelGeneratorConfiguration().getTargetPackage();
 		if (localService) {
 			localOrRemoteServiceAnnotationType = new FullyQualifiedJavaType(
-					"com.anywide.dawdler.local.service.annotation.LocalService");
+					"club.dawdler.local.service.annotation.LocalService");
 		} else {
 			localOrRemoteServiceAnnotationType = new FullyQualifiedJavaType(
-					"com.anywide.dawdler.remote.service.annotation.RemoteService");
+					"club.dawdler.remote.service.annotation.RemoteService");
 		}
 
 		controllerAnnotationType = new FullyQualifiedJavaType(
-				"com.anywide.dawdler.clientplug.web.annotation.Controller");
+				"club.dawdler.clientplug.web.annotation.Controller");
 		responseBodyAnnotationType = new FullyQualifiedJavaType(
-				"com.anywide.dawdler.clientplug.web.annotation.ResponseBody");
+				"club.dawdler.clientplug.web.annotation.ResponseBody");
 		requestMappingAnnotationType = new FullyQualifiedJavaType(
-				"com.anywide.dawdler.clientplug.web.annotation.RequestMapping");
-		serviceAnnotationType = new FullyQualifiedJavaType("com.anywide.dawdler.core.service.annotation.Service");
+				"club.dawdler.clientplug.web.annotation.RequestMapping");
+		serviceAnnotationType = new FullyQualifiedJavaType("club.dawdler.core.service.annotation.Service");
 		repositoryAnnotationType = new FullyQualifiedJavaType(
-				"com.anywide.dawdler.core.db.annotation.Repository");
+				"club.dawdler.core.db.annotation.Repository");
 		dBTransactionAnnotationType = new FullyQualifiedJavaType(
-				"com.anywide.dawdler.core.db.annotation.DBTransaction");
+				"club.dawdler.core.db.annotation.DBTransaction");
 		dBTransactionMODEType = new FullyQualifiedJavaType(
-				"com.anywide.dawdler.core.db.annotation.DBTransaction.MODE");
+				"club.dawdler.core.db.annotation.DBTransaction.MODE");
 		return true;
 	}
 
@@ -159,20 +159,20 @@ public class AnywidePlugin extends PluginAdapter {
 					pojoUrl + "." + tableName);
 		}
 		// 分页
-		pageType = new FullyQualifiedJavaType("com.anywide.dawdler.serverplug.load.bean.Page");
+		pageType = new FullyQualifiedJavaType("club.dawdler.serverplug.load.bean.Page");
 		// list
 		listType = FullyQualifiedJavaType.getNewListInstance();
 
 		requestMethodType = new FullyQualifiedJavaType(
-				"com.anywide.dawdler.clientplug.web.annotation.RequestMapping.RequestMethod");
+				"club.dawdler.clientplug.web.annotation.RequestMapping.RequestMethod");
 
-		pageResultType = new FullyQualifiedJavaType("com.anywide.dawdler.core.result.PageResult");
+		pageResultType = new FullyQualifiedJavaType("club.dawdler.core.result.PageResult");
 		FullyQualifiedJavaType pojoListType = new FullyQualifiedJavaType("List");
 		pojoListType.addTypeArgument(pojoType);
 		pageResultType.addTypeArgument(pojoListType);
-		baseResultType = new FullyQualifiedJavaType("com.anywide.dawdler.core.result.BaseResult");
+		baseResultType = new FullyQualifiedJavaType("club.dawdler.core.result.BaseResult");
 		baseResultType.addTypeArgument(pojoType);
-		baseVoidResultType = new FullyQualifiedJavaType("com.anywide.dawdler.core.result.BaseResult");
+		baseVoidResultType = new FullyQualifiedJavaType("club.dawdler.core.result.BaseResult");
 		baseVoidResultType.addTypeArgument(new FullyQualifiedJavaType("java.lang.Void"));
 		if (controllerPack != null && !"".equals(controllerPack)) {
 			TopLevelClass topLevelClass = new TopLevelClass(controllerType);
